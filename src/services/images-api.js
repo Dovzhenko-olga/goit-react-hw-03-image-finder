@@ -11,4 +11,8 @@ const fetchImages = ({ searchQuery = '', currentPage = 1, pageSize = 12 }) => {
     .then(({data}) => data.hits);
 };
 
-export default { fetchImages };
+const api = {
+  fetchImages,
+}
+
+export default api;
