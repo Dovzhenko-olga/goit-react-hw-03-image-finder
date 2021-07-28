@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
 import Loader from "react-loader-spinner";
 import imagesApi from './services/images-api';
 import Container from './components/Container';
@@ -9,6 +10,7 @@ import Modal from './components/Modal';
 
 import styles from './App.module.css';
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
+import 'react-toastify/dist/ReactToastify.css';
 
 
 class App extends Component {
@@ -17,7 +19,6 @@ class App extends Component {
     currentPage: 1,
     searchQuery: '',
     isLoading: false,
-    error: null,
     showModal: false,
     largeImageURL: '',
     tags: '',
@@ -52,7 +53,9 @@ class App extends Component {
           behavior: 'smooth',
         });
       })
-      .catch(error => this.setState({error: error.message}))
+      .catch(toast.info('Try again!', {
+        className: styles.toaster
+      }))
       .finally(() => this.setState({ isLoading: false }));
   };
 
@@ -71,7 +74,7 @@ class App extends Component {
   };
 
   render() {
-    const { hits, isLoading, error, showModal, largeImageURL, tags } = this.state;
+    const { hits, isLoading, showModal, largeImageURL, tags } = this.state;
     const shouldRenderLoadMoreButton = hits.length > 0 && !isLoading;
 
     return (
@@ -79,8 +82,6 @@ class App extends Component {
         
         <Searchbar onSubmit={this.onChangeQuery} />
         <ImageGallery hits={hits} onClick={this.onModal}/>
-
-        {error && <h1>Try again!</h1>}
           
         {shouldRenderLoadMoreButton && <Button onClick={this.fetchImages} />}
 
@@ -97,7 +98,7 @@ class App extends Component {
            <img src={largeImageURL} alt={tags} />
         </Modal>
         )}
-
+        <ToastContainer autoClose={3000} />
       </Container>
     );
   }
