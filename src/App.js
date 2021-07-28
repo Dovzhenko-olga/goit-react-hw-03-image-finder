@@ -42,6 +42,10 @@ class App extends Component {
 
     imagesApi.fetchImages(options)
       .then(hits => {
+        if(hits.length === 0) {
+          toast.info('Try again!', {
+          className: styles.toaster
+          })}
         this.setState(prevState => ({
           hits: [...prevState.hits, ...hits],
           currentPage: prevState.currentPage + 1,
@@ -53,13 +57,13 @@ class App extends Component {
           behavior: 'smooth',
         });
       })
-      .catch(toast.info('Try again!', {
+      .catch(() => {toast.info('Try again!', {
         className: styles.toaster
-      }))
+      })})
       .finally(() => this.setState({ isLoading: false }));
   };
 
-  onModal = ({ largeImageURL, tags }) => {
+    onModal = ({ largeImageURL, tags }) => {
     this.setState({
       largeImageURL: largeImageURL,
       tags: tags,
